@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app" a=1>
+      <div style="color: red;fontSize: '18px'">
+        <span>a{{name}}b <a>hello</a> </span>
+      </div>
+    </div>
+    <script src="/dist/umd/vue.js"></script>
+    <!--
+      模板编译原理 AST语法树（树的遍历） 先标识出html来 -> js语法
+      1.需要将模板变成一个render方法 render() {return _l(3,_c('li', {},name))} 
+      2.需要去当前实例上取值 with
+      3.生成虚拟dom=>对象，可以描述dom结构（diff算法）
+      4.要生成一个真实的dom结构渲染
+    -->
+    <script>
+      let vm = new Vue({
+        el: '#app',
+        data() {
+          return {
+            name: 'jack',
+            age: 18
+          }
+        }
+      })
+      // vm.age.push({b:2})
+      // vm.age.age = {age: 18}
+      // console.log(vm)
+      // const persons = [
+      //   { name: 'kevin', age: 4 },
+      //   { name: 'bob', age: 5 },
+      //   { name: 'tom', age: 6 },
+      //   { name: 'rose', age: 7 },
+      // ]
+      // function curry(fn, currArgs) {
+      //   console.log('currArgs:', currArgs)
+      //   return function () {
+      //     console.log('appfunctionly:', arguments)
+      //     console.log('fn:', fn.length)
+      //     let args = [].slice.call(arguments)
+
+      //     // 首次调用时，若未提供最后一个参数currArgs，则不用进行args的拼接
+      //     if (currArgs !== undefined) {
+      //       args = args.concat(currArgs)
+      //     }
+
+      //     console.log('apply1:', args)
+      //     // 递归调用
+      //     if (args.length < fn.length) {
+      //       console.log('递归')
+      //       return curry(fn, args)
+      //     }
+      //     console.log('apply:', args)
+      //     // 递归出口
+      //     return fn.apply(null, args)
+      //   }
+      // }
+      // // 这里的 curry 函数，之前已实现
+      // const getProp = curry(function (obj, index) {
+      //   const args = [].slice.call(arguments)
+      //   // console.log('ss', args)
+      //   return obj[args[args.length - 1]]
+      // })
+      // console.log(getProp.length)
+
+      // const ages = persons.map(getProp('age'))
+      // console.log( "ages", ages ) // [4, 5]
+      // const names = persons.map(getProp('name')) // ['kevin', 'bob']
+    </script>
+  </body>
+</html>
