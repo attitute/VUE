@@ -4,11 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style> 
+      #color {
+        color: red;
+      }
+      .color {
+        color: black;
+      }
+    </style>
   </head>
   <body>
     <div id="app" a=1>
-      <div style="color: red;fontSize: '18px'">
-        <span>a{{name}}b <a>hello</a> </span>
+      <div style="color: green; fontSize: '18px'"> green
+        <span class="color">bla{{name}}ck <a id="color">red</a> </span>
       </div>
     </div>
     <script src="/dist/umd/vue.js"></script>

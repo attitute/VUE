@@ -23,6 +23,7 @@ export function initMixin (Vue) {
     el = document.querySelector(el)
     const vm = this
     const options = vm.$options
+    options.el = el
 
     if(!options.render){ // 没有render函数时
       let template = options.template
@@ -32,7 +33,6 @@ export function initMixin (Vue) {
       // 把模板编译成render函数
       const render = compileToFunctions(template)
       options.render = render
-      console.log(options.render)
     }
 
     mountComponent(vm, el) // 组件挂载
