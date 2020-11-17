@@ -21,11 +21,12 @@
     </div>
     <script src="/dist/umd/vue.js"></script>
     <!--
-      模板编译原理 AST语法树（树的遍历） 先标识出html来 -> js语法
-      1.需要将模板变成一个render方法 render() {return _l(3,_c('li', {},name))} 
-      2.需要去当前实例上取值 with
-      3.生成虚拟dom=>对象，可以描述dom结构（diff算法）
-      4.要生成一个真实的dom结构渲染
+      1.对数据进行拦截 对象 数组（依赖收集）
+      2.template => AST语法树（树的遍历） 先标识出html来 -> js语法
+      3.需要将模板变成一个render方法，要去当前实例上取值 with  render() {return _l(3,_c('li', {},name))} 
+      4.new Vue时会产生一个watcher（渲染watcher）
+      5.render方法 使用_render函数生成虚拟dom=>对象，可以描述dom结构
+      6.虚拟节点通过_update方法生成一个真实的dom结构渲染
     -->
     <script>
       let vm = new Vue({
