@@ -13,7 +13,6 @@ export function patch (oldVnode,vnode) {
 
         parentElm.insertBefore(el, oldElm.nextSibling)
         parentElm.removeChild(oldElm)
-        console.log(el)
 
         return el // vm.$el
 
@@ -49,7 +48,6 @@ function updateProperties(vnode) {
 
     for(let key in newProps) {
         if (key == 'style') { // key是不是style
-            console.log(newProps)
             el.style = newProps.style
         } else if (key == 'class'){
             el.className = newProps.class

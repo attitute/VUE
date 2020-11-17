@@ -1,0 +1,12 @@
+依赖收集 ：
+当模板渲染时 watcher会被调用， dep.target会记住当前的watcher
+然后执行模板编译阶段 vm.__update(vm.__render()) 编译时就会调用defineProperty.get 
+方法。 get方法就会根据dep.target 来判断当前是不是模板编译阶段 
+如果有值 那么当前的watcher 就调用dep.depend 方法 在调用watcher的addDep方法
+让watcher记住当前dep
+Wacther中记住dep 为了避免模板编译时 使用了多个相同的属性 调用多次dep.depend方法
+所以需要对dep进行去重操作 dep每次实例化时 dep.id就会加一 
+但是属性get取值dep还是那个dep 所以只需要根据id进行去重即可 
+然后在调用watcher的addDep方法时 将dep也保存在watcher的deps中 将watcher保存在dep的subs中
+
+实现了一个dep对应一个watcher 
