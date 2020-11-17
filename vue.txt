@@ -1,0 +1,31 @@
+依赖收集 ：
+当模板渲染时 watcher会被调用， dep.target会记住当前的watcher
+然后执行模板编译阶段 vm.__update(vm.__render()) 编译时就会调用defineProperty.get 
+方法。 get方法就会根据dep.target 来判断当前是不是模板编译阶段 
+如果有值 那么当前的watcher 就调用dep.depend 方法 在调用watcher的addDep方法
+让watcher记住当前dep
+Wacther中记住dep 为了避免模板编译时 使用了多个相同的属性 调用多次dep.depend方法
+所以需要对dep进行去重操作 dep每次实例化时 dep.id就会加一 
+但是属性get取值dep还是那个dep 所以只需要根据id进行去重（new set去重 has add方法）即可 
+然后在调用watcher的addDep方法时 将dep也保存在watcher的deps中 将watcher保存在dep的subs中
+
+实现了一个dep对应一个watcher 
+
+处理渲染逻辑
+
+每次设置值defineProperty.set  使用dep.notify方法 执行所有在dep的subs中watcher的update方法更新渲染 
+为了防止多次修改同一属性 导致多次调用watcher ，对watcher做去重（使用对象取值方法）操作 ，
+将需要更新的wactcher放入数组中，使用nextTick方法进行异步更新操作，为了防止多个不同watcher
+产生多个异步处理 所以我们对此进行批处理操作 ， 使用nextTick方法对watcher进行了渲染， 考虑到多个地方都要用到nextTick
+于是进行 nextTick封装，
+
+nextTick: 封装原理 不考虑兼容性 接受一个需要执行的函数 将函数放入数组中 最后异步执行数组中的所有方法就行 
+我们直接使用promise.reoslve().then(需执行的函数)进行异步处理 ，
+因为nextTick也存在与之前相同的问题 于是进行批处理操作
+
+注：批处理更新， 既然是放入到数组中 每次执行一个异步 不如直接先更新数组 到不更新为止（使用一个变量即可做到，异步执行完再重置cd） 再调用一次异步即可
+
+
+
+
+

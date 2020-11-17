@@ -16,7 +16,9 @@
   <body>
     <div id="app" a=1>
       <div style="color: green; fontSize: '18px'"> green
-        <span class="color">bla{{name}}ck <a id="color">red</a> </span>
+        <span class="color">bla-{{name}}-ck <a id="color">red</a> </span>
+        <p>
+        <span class="color">{{arr}}</span>
       </div>
     </div>
     <script src="/dist/umd/vue.js"></script>
@@ -34,10 +36,26 @@
         data() {
           return {
             name: 'jack',
-            age: 18
+            age: 18,
+            arr: [[1],2,3]
           }
         }
       })
+
+      setTimeout(() => {
+      // vm.name = 'rose'
+      // vm.name = 'rose1'
+      // vm.name = 'rose2'
+      // vm.age = 20
+      // vm.arr.push(4)
+      vm.arr[0].push(4)
+      vm.$nextTick(()=>{
+        console.log(vm.$options.el.innerHTML)
+      })
+      // vm.age = 15
+        
+      }, 1000);
+      
       // vm.age.push({b:2})
       // vm.age.age = {age: 18}
       // console.log(vm)

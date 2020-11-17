@@ -21,6 +21,7 @@ methods.forEach( methods => { // 切片编程AOP
     let result = oldArrayProtoMethods[methods].call(this, ...args)
     // 有可能用户新增的数据是对象 也需要进行拦截
     let inserted;
+    let ob = this.__ob__
     switch (methods) {
       case 'push':
       case 'unshift':
@@ -32,7 +33,10 @@ methods.forEach( methods => { // 切片编程AOP
       break
     }
     // 这边的this是value 谁调用 this就指向谁
-    if (inserted) this.__ob__.observeArray(inserted)
+    if (inserted) {
+      ob.observeArray(inserted)
+      ob.dep.notify() // 调用当前数组绑定的Observer中的dep的更新方法
+    }
     return result
   }
 })

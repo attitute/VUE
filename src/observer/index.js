@@ -1,7 +1,9 @@
 import { arrayMethods } from './array'
+import { Dep } from './dep'
 
 class Observer {
   constructor(value) {
+    this.dep = new Dep() // 给数组和对象添加dep属性
     // 把当前Observer类的this 在value上储存起来
     Object.defineProperty(value, '__ob__', {
       value: this,
@@ -31,16 +33,36 @@ class Observer {
     })
   }
 }
+
+function dependArray(value) {
+  value.forEach(v=>{
+    v.__ob__ && v.__ob__.dep.depend()
+    if (Array.isArray(v))dependArray(v)
+  })
+}
+
 function defineReactive(data, key, value) {
-  observe(value) // value可能也是个对象 对象套对象
+  let childOb = observe(value) // value可能也是个对象 对象套对象
+  console.log(childOb)
+  let dep = new Dep() // 每次存取值都会创建一个Dep 给属性加dep
   Object.defineProperty(data, key, {
     set(newValue) {
       if (newValue === value) return
       observe(newValue) // 新设置的值可能也是个对象
       value = newValue
+      dep.notify();// 通知dep中记录的watcher让它去执行
     },
     get() {
-      console.log(key)
+      if(Dep.target){
+        dep.depend() // 让dep记住watcher 
+        // childOb 可能是对象和数组
+        if (childOb) { // 如果对数组取值 将数组与当前watcher关联
+          childOb.dep.depend()
+          if(Array.isArray(value)) { // 如果值是数组得再次操作
+            dependArray(value)
+          }
+        }
+      }
       return value
     },
   })

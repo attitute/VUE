@@ -2,6 +2,7 @@
 import {initState} from './state'
 import {compileToFunctions} from './compiler/index'
 import { mountComponent } from './lifecycle'
+import { nextTick } from './util'
 
 // 在原型上添加一个init 方法
 export function initMixin (Vue) {
@@ -18,6 +19,7 @@ export function initMixin (Vue) {
       vm.$mount(vm.$options.el)
     }
   }
+  Vue.prototype.$nextTick = nextTick
   // 获取template
   Vue.prototype.$mount = function (el) {
     el = document.querySelector(el)

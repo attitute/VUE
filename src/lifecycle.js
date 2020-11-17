@@ -9,8 +9,7 @@ export function lifecycleMixin(Vue) {
 
     const vm = this
     // 首次渲染 需要用虚拟节点 来更新真实得dom元素
-    vm.$el = patch(vm.$options.el, vnode)
-    console.log(vm)
+    vm.$options.el= patch(vm.$options.el, vnode)
   }
 }
 

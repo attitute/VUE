@@ -18,7 +18,6 @@ export function renderMixin (Vue) {
     const vm = this
 
     let render = vm.$options.render
-
     let vnode = render.call(vm) // _c(xxx,xxx)调用时会自动将变量取值 将实例结果进行渲染
 
     return vnode // 生成虚拟节点
