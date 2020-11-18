@@ -1,4 +1,5 @@
 
+import { initGlobalAPI } from './global-api/index'
 import {initMixin} from './init'
 import { lifecycleMixin } from './lifecycle'
 import { renderMixin } from './render'
@@ -13,4 +14,9 @@ function Vue(options) {
 initMixin(Vue) // 扩展初始化方法
 lifecycleMixin(Vue) // 扩展_update方法
 renderMixin(Vue) // 扩展_render方法
+
+initGlobalAPI(Vue) // 混合全局的api
+
+
+
 export default Vue

@@ -31,8 +31,24 @@
       6.虚拟节点通过_update方法生成一个真实的dom结构渲染
     -->
     <script>
+      Vue.mixin({
+        a:1,
+        b:2,
+        beforeCreate() {
+          console.log('beforeCreate2')
+        },
+      }) 
+      Vue.mixin({
+        a:2,
+        beforeCreate() {
+          console.log('beforeCreate3')
+        },
+      })
       let vm = new Vue({
         el: '#app',
+        beforeCreate(){
+          console.log('beforeCreate1')
+        },
         data() {
           return {
             name: 'jack',
@@ -41,20 +57,19 @@
           }
         }
       })
-
-      setTimeout(() => {
-      // vm.name = 'rose'
-      // vm.name = 'rose1'
-      // vm.name = 'rose2'
-      // vm.age = 20
-      // vm.arr.push(4)
-      vm.arr[0].push(4)
-      vm.$nextTick(()=>{
-        console.log(vm.$options.el.innerHTML)
-      })
-      // vm.age = 15
+      // setTimeout(() => {
+      // // vm.name = 'rose'
+      // // vm.name = 'rose1'
+      // // vm.name = 'rose2'
+      // // vm.age = 20
+      // // vm.arr.push(4)
+      // vm.arr[0].push(4)
+      // vm.$nextTick(()=>{
+      //   console.log(vm.$options.el.innerHTML)
+      // })
+      // // vm.age = 15
         
-      }, 1000);
+      // }, 1000);
       
       // vm.age.push({b:2})
       // vm.age.age = {age: 18}

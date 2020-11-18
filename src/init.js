@@ -1,8 +1,8 @@
 
 import {initState} from './state'
 import {compileToFunctions} from './compiler/index'
-import { mountComponent } from './lifecycle'
-import { nextTick } from './util'
+import { callHook, mountComponent } from './lifecycle'
+import { mergeOptions, nextTick } from './util'
 
 // 在原型上添加一个init 方法
 export function initMixin (Vue) {
@@ -10,10 +10,13 @@ export function initMixin (Vue) {
   Vue.prototype._init = function (options) {
     // 数据劫持
     const vm = this // vue中使用 this.$options 指代的就是用户传递的属性
-    vm.$options = options
+    // vm.$options = options
+    vm.$options = mergeOptions(vm.constructor.options, options)
 
+    callHook(vm,'beforeCreate')
     // 初始化状态
     initState(vm) // 分割代码
+    callHook(vm,'created')
     
     if (vm.$options.el) { // 数据可以挂载到页面上
       vm.$mount(vm.$options.el)
