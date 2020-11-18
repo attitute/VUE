@@ -17,7 +17,6 @@ let methods = [
 
 methods.forEach( methods => { // 切片编程AOP 
   arrayMethods[methods] = function (...args) { // 重写数组的方法
-    console.log('进入数组的重写方法中')
     let result = oldArrayProtoMethods[methods].call(this, ...args)
     // 有可能用户新增的数据是对象 也需要进行拦截
     let inserted;

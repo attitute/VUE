@@ -16,7 +16,6 @@ export function lifecycleMixin(Vue) {
 // 调用生命周期钩子
 export function callHook(vm,hook) { // 发布模式
   const handlers = vm.$options[hook]
-  console.log(handlers)
   if (handlers)handlers.forEach(handler=>handler.call(vm))
 }
 

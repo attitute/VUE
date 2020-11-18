@@ -7,12 +7,11 @@ import { mergeOptions, nextTick } from './util'
 // 在原型上添加一个init 方法
 export function initMixin (Vue) {
   // 初始化流程
-  Vue.prototype._init = function (options) {
+  Vue.prototype._init = function (options) { // options 是用户传入的选项
     // 数据劫持
     const vm = this // vue中使用 this.$options 指代的就是用户传递的属性
     // vm.$options = options
     vm.$options = mergeOptions(vm.constructor.options, options)
-
     callHook(vm,'beforeCreate')
     // 初始化状态
     initState(vm) // 分割代码

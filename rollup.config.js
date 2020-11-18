@@ -17,7 +17,7 @@ export default {
     process.env.env === 'development' ? serve({
       open: true,
       openPage: '/public/index.html', // 默认打开html路径
-      port: 1000,
+      port: 10000,
       contentBase: '', // 以当前文件夹路径
     }) : null
   ]

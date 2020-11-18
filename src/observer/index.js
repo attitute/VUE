@@ -43,7 +43,6 @@ function dependArray(value) {
 
 function defineReactive(data, key, value) {
   let childOb = observe(value) // value可能也是个对象 对象套对象
-  console.log(childOb)
   let dep = new Dep() // 每次存取值都会创建一个Dep 给属性加dep
   Object.defineProperty(data, key, {
     set(newValue) {

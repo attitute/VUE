@@ -14,12 +14,14 @@
     </style>
   </head>
   <body>
-    <div id="app" a=1>
+    <div id="app">
       <div style="color: green; fontSize: '18px'"> green
         <span class="color">bla-{{name}}-ck <a id="color">red</a> </span>
         <p>
         <span class="color">{{arr}}</span>
       </div>
+      <my-button></my-button>
+      <my-button1></my-button1>
     </div>
     <script src="/dist/umd/vue.js"></script>
     <!--
@@ -44,10 +46,29 @@
           console.log('beforeCreate3')
         },
       })
+      Vue.component('my-button',{
+        name: 'my-button',
+        template:'<button>按钮1</button>'
+      });
+      Vue.component('my-button1',{
+        name: 'my-button',
+        template:'<button>按钮2</button>'
+      });
+      let sub = Vue.extend({
+        template:'<button>按钮3</button>'
+      })
+      sub.component('aa', {
+        
+      })
       let vm = new Vue({
         el: '#app',
         beforeCreate(){
           console.log('beforeCreate1')
+        },
+        components:{
+          'my-button':{
+            template:'<button>内部按钮</button>'
+          }
         },
         data() {
           return {

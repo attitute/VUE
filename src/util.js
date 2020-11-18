@@ -48,10 +48,21 @@ function mergeHook(parent,child) {
   }
 }
 
-
+// 生命周期合并策略
 LIFECYCLE_HOOKS.forEach(hook=>{
   starts[hook] = mergeHook
 })
+
+// 组件合并策略
+starts.components = function (parentVal, childVal) {
+  const res = Object.create(parentVal)
+  if (childVal) {
+    for (let key in childVal) { // 没有就添加 有就覆盖
+      res[key] = childVal[key]
+    }
+  }
+  return res
+}
 
 /*
   普通属性合并 如果都是对象直接合并（如果存在同一值，后面替换前面的） 
@@ -78,6 +89,18 @@ export function mergeOptions(parent,child) {
       options[key] = child[key] ? child[key] : parent[key]
     }
   }
-  console.log(options)
   return options
 }
+
+function makeUp(str) {
+  let map = {}
+  str.split(',').forEach(v => {
+    map[v] = true
+  })
+  return (tag) => map[tag] || false
+}
+
+export const isReservedTag = makeUp('a,span,div,ul,li,span,input,button')
+
+
+
