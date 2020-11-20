@@ -1,5 +1,6 @@
 
 export function patch (oldVnode,vnode) {
+    if (!oldVnode) return createElm(vnode)
     // oldVnode 是一个真实的元素
     const isRealElment = oldVnode.nodeType
 
@@ -22,10 +23,30 @@ export function patch (oldVnode,vnode) {
 
 }
 
-function createElm(vnode) {
+function createComponent(vnode){
+    let i = vnode.data
+    // i.hook && i.hook.init
+    // i = i.hook.init
+    // i = ihook i里面hook里面有init 那就是组件
+    if ((i = i.hook) && (i = i.init)){
+        i(vnode) // 调用组件得初始化方法 得到vnode.componentInstance.$el
+    }
+    if (vnode.componentInstance) { // 如果虚拟节点有
+        return true
+    }
+    return false
+}
+// 生成真实节点
+export function createElm(vnode) {
     let {tag, children, key, data, text, vm} = vnode
 
     if(typeof tag === 'string'){
+        // 如果是组件 就根据组件创建出组件里面内容的真实节点
+        if (createComponent(vnode)){ // 如果是组件，就将组件渲染后结果返回
+            return vnode.componentInstance.$el
+        }
+
+
         vnode.el = document.createElement(tag) // 生成元素
 
         updateProperties(vnode) // 生成样式

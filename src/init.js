@@ -24,10 +24,10 @@ export function initMixin (Vue) {
   Vue.prototype.$nextTick = nextTick
   // 获取template
   Vue.prototype.$mount = function (el) {
-    el = document.querySelector(el)
+    el = el && document.querySelector(el)
     const vm = this
     const options = vm.$options
-    options.el = el
+    vm.$el = el
 
     if(!options.render){ // 没有render函数时
       let template = options.template
@@ -39,6 +39,6 @@ export function initMixin (Vue) {
       options.render = render
     }
 
-    mountComponent(vm, el) // 组件挂载
+    mountComponent(vm) // 组件挂载
   }
 }

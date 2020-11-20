@@ -29,7 +29,6 @@ export function initGlobalAPI(Vue) {
 
         // 子类也需要options 把父类的options 和子类的options合并
         Sub.options = mergeOptions(Super.options,options) 
-
         return Sub // 这个构造函数是由对象产生的
     
     }

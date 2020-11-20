@@ -14,7 +14,7 @@ export default {
     babel({
       exclude: "node_modules/**" // 排除node_modules下面所有的文件
     }),
-    process.env.env === 'development' ? serve({
+    process.env === 'development' ? serve({
       open: true,
       openPage: '/public/index.html', // 默认打开html路径
       port: 10000,

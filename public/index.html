@@ -17,11 +17,11 @@
     <div id="app">
       <div style="color: green; fontSize: '18px'"> green
         <span class="color">bla-{{name}}-ck <a id="color">red</a> </span>
-        <p>
         <span class="color">{{arr}}</span>
       </div>
       <my-button></my-button>
       <my-button1></my-button1>
+      <my-button2></my-button2>
     </div>
     <script src="/dist/umd/vue.js"></script>
     <!--
@@ -33,24 +33,24 @@
       6.虚拟节点通过_update方法生成一个真实的dom结构渲染
     -->
     <script>
-      Vue.mixin({
-        a:1,
-        b:2,
-        beforeCreate() {
-          console.log('beforeCreate2')
-        },
-      }) 
-      Vue.mixin({
-        a:2,
-        beforeCreate() {
-          console.log('beforeCreate3')
-        },
-      })
-      Vue.component('my-button',{
+      // Vue.mixin({
+      //   a:1,
+      //   b:2,
+      //   beforeCreate() {
+      //     console.log('beforeCreate2')
+      //   },
+      // }) 
+      // Vue.mixin({
+      //   a:2,
+      //   beforeCreate() {
+      //     console.log('beforeCreate3')
+      //   },
+      // })
+      Vue.component('my-button1',{
         name: 'my-button',
         template:'<button>按钮1</button>'
       });
-      Vue.component('my-button1',{
+      Vue.component('my-button2',{
         name: 'my-button',
         template:'<button>按钮2</button>'
       });
@@ -62,9 +62,9 @@
       })
       let vm = new Vue({
         el: '#app',
-        beforeCreate(){
-          console.log('beforeCreate1')
-        },
+        // beforeCreate(){
+        //   console.log('beforeCreate1')
+        // },
         components:{
           'my-button':{
             template:'<button>内部按钮</button>'

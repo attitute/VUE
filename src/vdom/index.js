@@ -12,13 +12,16 @@ export function createElement(vm, tag, data={}, ...children) {
     }
 }
 function createComponent(vm,tag,data,key,children,Ctor) {
-    console.log(vm.$options)
-    if (isObject(Ctor)) Ctor = vm.$options._base.extend(Ctor) // 对象即生成一个函数
+    if (isObject(Ctor)) Ctor = vm.$options._base.extend(Ctor) // 是对象即生成一个函数
+    // 给组件增加生命周期 组件才有hook
     data.hook = {
         init(vnode){
+            // 调用子组件得构造函数
             let child = vnode.componentInstance = new vnode.componentOptions.Ctor({})
+            child.$mount() // 组件直接调用继承过来的方法 组件上有$el属性vnode.componentInstance.$el
         }
     }
+    return vnode(vm,`vue-component-${Ctor.cid}-${tag}`,data,key,undefined,undefined,{Ctor})
 }
 
 export function createTextVnode(vm, text) {
@@ -26,14 +29,15 @@ export function createTextVnode(vm, text) {
 }
 
 
-function vnode(vm, tag, data,key,children,text) {
+function vnode(vm, tag, data,key,children,text,componentOptions) {
     return {
         vm,
         tag,
         children,
         data,
         key,
-        text
+        text,
+        componentOptions
     }
 
 }
