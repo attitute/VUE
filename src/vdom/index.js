@@ -41,3 +41,7 @@ function vnode(vm, tag, data,key,children,text,componentOptions) {
     }
 
 }
+
+export function isSameVnode(oldVnode, newVnode) {
+    return (oldVnode.tag == newVnode.tag) && (oldVnode.key == newVnode.key)
+}
