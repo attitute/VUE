@@ -8,8 +8,16 @@ export function lifecycleMixin(Vue) {
   Vue.prototype._update = function(vnode){
 
     const vm = this
-    // 首次渲染 需要用虚拟节点 来更新真实得dom元素
-    vm.$el= patch(vm.$el, vnode)
+
+
+    const prevVnode = vm._vnode // 先取上一次的vnode 看一下是否有
+    vm._vnode = vnode // 保存上一次的虚拟节点
+    if (!prevVnode){
+      // 首次渲染 需要用虚拟节点 来更新真实得dom元素
+      vm.$el= patch(vm.$el, vnode)
+    } else {
+      vm.$el = patch(prevVnode, vnode)
+    }
   }
 }
 

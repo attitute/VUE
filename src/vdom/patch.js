@@ -1,4 +1,4 @@
-import { isSameVnode } from "."
+import { isSameVnode } from "./index"
 
 export function patch (oldVnode,vnode) {
     if (!oldVnode) return createElm(vnode)
@@ -18,7 +18,7 @@ export function patch (oldVnode,vnode) {
         return el // vm.$el
 
     }else {
-        // diff算法
+        // diff算法 要点：1.双指针 2.对常用操作的几种优化 3.无序排列是怎么做到的
         // 1.如果两个虚拟节点得标签不一致 直接替换即可
         if (oldVnode.tag !== vnode.tag){
             return oldVnode.el.parentNode.replaceChild(createElm(vnode), oldVnode.el)
@@ -63,9 +63,25 @@ function updateChildren(parent,oldChildren, newChildren) {
     let newStartVnode = newChildren[0]; // 新的开始节点
     let newEndVnode = newChildren[newEndIndex]; // 新的结束节点
 
+    function makeIndexByKey(oldChildren) {
+        let map = {}
+        oldChildren.forEach((item,index)=>{
+            map[item.key] = index
+        })
+        return map
+    }
+
+    let map = makeIndexByKey(oldChildren)
+
+
     while(oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex){
+        // 1.前端中比较常见的操作有 像尾部插入 头部插入 头移动到尾部 尾部移动头部，正序和反序
+        if(!oldStartVnode){ // 可能节点从前往后移动 发现是空的
+            oldStartVnode = oldChildren[++oldStartIndex]
+        }else if (!oldEndVnode){ // 可能节点从后往前移动 发现是空的
+            oldEndVnode = oldChildren[--oldEndIndex]
         // 1.向后插入的操作 
-        if (isSameVnode(oldStartVnode,newStartVnode)){// 头和头是否相同
+        }else if (isSameVnode(oldStartVnode,newStartVnode)){// 头和头是否相同
             patch(oldStartVnode,newStartVnode)
             oldStartVnode = oldChildren[++oldStartIndex]
             newStartVnode = newChildren[++newStartIndex]
@@ -80,14 +96,46 @@ function updateChildren(parent,oldChildren, newChildren) {
             parent.insertBefore(oldStartVnode.el,oldEndVnode.el.nextSibling) // 插入到老的（oldEndVnode）下一个的前面  // oldEndVnode一直是第一次那个老节点
             oldStartVnode = oldChildren[++oldStartIndex]
             newEndVnode = newChildren[--newEndIndex]
+        // 4.老尾和新头比
+        }else if(isSameVnode(oldEndVnode, newStartVnode)) {
+            patch(oldEndVnode,newStartVnode)
+            parent.insertBefore(oldEndVnode.el,oldStartVnode.el)
+            oldEndVnode = oldChildren[--oldEndIndex]
+            newStartVnode = newChildren[++newStartIndex]
+        // 5. 无序排列
+        }else {
+            // 1.需要先查找当前 老节点索引和key的关系
+            // 移动的时候通过新的key 去找对应的老节点索引 -> 获取老节点，可以移动老节点
+            let moveIndex = map[newStartVnode.key]
+            if(moveIndex == undefined) { // 如果老节点里没有新节点的元素
+                parent.insertBefore(createElm(newStartVnode), oldStartVnode.el)
+            } else {
+                let moveVnode = oldChildren[moveIndex]
+                oldChildren[moveIndex] = undefined // 对移动的元素原先位置补一个值
+                patch(moveVnode, newStartVnode) // 进行两个虚拟节点的属性处理
+                parent.insertBefore(moveVnode.el, oldStartVnode.el)
+            }
+            newStartVnode = newChildren[++newStartIndex]
         }
     }
     if (newStartIndex <= newEndIndex){ // 新的比老的多 插入新节点
         for (let i = newStartIndex; i <= newEndIndex; i++){
-            parent.appendChild(createElm(newChildren[i]))
+            // 向前插入 向后插入
+
+            let nextEle = newChildren[newEndIndex + 1] == null ? null : newChildren[newEndIndex+1].el
+        
+            parent.appendChild(createElm(newChildren[i]), nextEle)
+
         }
     }
-
+    if(oldStartIndex <= oldEndIndex){ // 老的比新的多 删除多余节点
+        for(let i = oldStartIndex; i <= oldEndIndex; i++){
+            let child = oldChildren[i]
+            if(child){
+                parent.removeChild(child.el)
+            }
+        }
+    }
 }
 
 function updateProperties(vnode,oldProps = {}) {

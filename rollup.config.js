@@ -7,18 +7,20 @@ export default {
   output: {
     file: 'dist/umd/vue.js', // 出口路径
     name: 'Vue', // 指定打包后全局变量的名字
-    format: 'umd', // 统一模块规范
+    format: 'umd', // 统一模块规范 Window.Vue
     sourcemap: true, // es6->es5 开启源码调试 可以找到源码报错位置
   },
   plugins: [
     babel({
       exclude: "node_modules/**" // 排除node_modules下面所有的文件
     }),
-    process.env === 'development' ? serve({
+    // process.env === 'development' ? 
+    serve({
       open: true,
       openPage: '/public/index.html', // 默认打开html路径
       port: 3000,
       contentBase: '', // 以当前文件夹路径
-    }) : null
+    }) 
+    // : null
   ]
 }

@@ -1,7 +1,6 @@
 import {isObject, isReservedTag} from '../util'
 
 export function createElement(vm, tag, data={}, ...children) {
-
     // 需要对标签名做过滤 因为有可能是自定义组件
     if (isReservedTag(tag)) {
         return vnode(vm, tag, data, data.key, children, undefined)

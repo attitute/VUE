@@ -1,140 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style> 
-      #color {
-        color: red;
-      }
-      .color {
-        color: black;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app">
-      <div style="color: green; fontSize: '18px'"> green
-        <span class="color">bla-{{name}}-ck <a id="color">red</a> </span>
-        <span class="color">{{arr}}</span>
-      </div>
-      <my-button></my-button>
-      <my-button1></my-button1>
-      <my-button2></my-button2>
-    </div>
+</head>
+<body>
     <script src="/dist/umd/vue.js"></script>
-    <!--
-      1.对数据进行拦截 对象 数组（依赖收集）
-      2.template => AST语法树（树的遍历） 先标识出html来 -> js语法
-      3.需要将模板变成一个render方法，要去当前实例上取值 with  render() {return _l(3,_c('li', {},name))} 
-      4.new Vue时会产生一个watcher（渲染watcher）
-      5.render方法 使用_render函数生成虚拟dom=>对象，可以描述dom结构
-      6.虚拟节点通过_update方法生成一个真实的dom结构渲染
-    -->
+    <div id="app">
+        <li>hello</li>
+        <span>{{name}}</span>
+    </div>
     <script>
-      // Vue.mixin({
-      //   a:1,
-      //   b:2,
-      //   beforeCreate() {
-      //     console.log('beforeCreate2')
-      //   },
-      // }) 
-      // Vue.mixin({
-      //   a:2,
-      //   beforeCreate() {
-      //     console.log('beforeCreate3')
-      //   },
-      // })
-      Vue.component('my-button1',{
-        name: 'my-button',
-        template:'<button>按钮1</button>'
-      });
-      Vue.component('my-button2',{
-        name: 'my-button',
-        template:'<button>按钮2</button>'
-      });
-      let sub = Vue.extend({
-        template:'<button>按钮3</button>'
-      })
-      sub.component('aa', {
+        const vm = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    name: 'jack'
+                }
+            }
+        })
         
-      })
-      let vm = new Vue({
-        el: '#app',
-        // beforeCreate(){
-        //   console.log('beforeCreate1')
-        // },
-        components:{
-          'my-button':{
-            template:'<button>内部按钮</button>'
-          }
-        },
-        data() {
-          return {
-            name: 'jack',
-            age: 18,
-            arr: [[1],2,3]
-          }
-        }
-      })
-      // setTimeout(() => {
-      // // vm.name = 'rose'
-      // // vm.name = 'rose1'
-      // // vm.name = 'rose2'
-      // // vm.age = 20
-      // // vm.arr.push(4)
-      // vm.arr[0].push(4)
-      // vm.$nextTick(()=>{
-      //   console.log(vm.$options.el.innerHTML)
-      // })
-      // // vm.age = 15
-        
-      // }, 1000);
-      
-      // vm.age.push({b:2})
-      // vm.age.age = {age: 18}
-      // console.log(vm)
-      // const persons = [
-      //   { name: 'kevin', age: 4 },
-      //   { name: 'bob', age: 5 },
-      //   { name: 'tom', age: 6 },
-      //   { name: 'rose', age: 7 },
-      // ]
-      // function curry(fn, currArgs) {
-      //   console.log('currArgs:', currArgs)
-      //   return function () {
-      //     console.log('appfunctionly:', arguments)
-      //     console.log('fn:', fn.length)
-      //     let args = [].slice.call(arguments)
+        setTimeout(() => {
+            vm.name = 'jw'
+        }, 2000);
 
-      //     // 首次调用时，若未提供最后一个参数currArgs，则不用进行args的拼接
-      //     if (currArgs !== undefined) {
-      //       args = args.concat(currArgs)
-      //     }
 
-      //     console.log('apply1:', args)
-      //     // 递归调用
-      //     if (args.length < fn.length) {
-      //       console.log('递归')
-      //       return curry(fn, args)
-      //     }
-      //     console.log('apply:', args)
-      //     // 递归出口
-      //     return fn.apply(null, args)
-      //   }
-      // }
-      // // 这里的 curry 函数，之前已实现
-      // const getProp = curry(function (obj, index) {
-      //   const args = [].slice.call(arguments)
-      //   // console.log('ss', args)
-      //   return obj[args[args.length - 1]]
-      // })
-      // console.log(getProp.length)
-
-      // const ages = persons.map(getProp('age'))
-      // console.log( "ages", ages ) // [4, 5]
-      // const names = persons.map(getProp('name')) // ['kevin', 'bob']
     </script>
-  </body>
+</body>
 </html>

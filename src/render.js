@@ -3,7 +3,6 @@ import { createElement, createTextVnode } from "./vdom/index"
 // 调用自定义render方法
 export function renderMixin (Vue) {
   Vue.prototype._c = function (...args) {
-    console.log(this)
     const vm = this
     return createElement(vm, ...args)
   }
