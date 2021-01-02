@@ -2,9 +2,9 @@
 当模板渲染时 watcher会被调用， dep.target会记住当前的watcher
 然后执行模板编译阶段 vm.__update(vm.__render()) 编译时就会调用defineProperty.get 
 方法。 get方法就会根据dep.target 来判断当前是不是模板编译阶段 
-如果有值 那么当前的watcher 就调用dep.depend 方法 在调用watcher的addDep方法
+如果有值 那么当前的watcher 就调用dep.depend方法 在调用watcher的addDep方法
 让watcher记住当前dep
-Wacther中记住dep 为了避免模板编译时 使用了多个相同的属性 调用多次dep.depend方法
+Wacther中记住dep 为了避免模板编译时 使用了多的个相同属性 调用多次dep.depend方法
 所以需要对dep进行去重操作 dep每次实例化时 dep.id就会加一 
 但是属性get取值dep还是那个dep 所以只需要根据id进行去重（new set去重 has add方法）即可 
 然后在调用watcher的addDep方法时 将dep也保存在watcher的deps中 将watcher保存在dep的subs中
@@ -24,6 +24,68 @@ nextTick: 封装原理 不考虑兼容性 接受一个需要执行的函数 将�
 因为nextTick也存在与之前相同的问题 于是进行批处理操作
 
 注：批处理更新， 既然是放入到数组中 每次执行一个异步 不如直接先更新数组 到不更新为止（使用一个变量即可做到，异步执行完再重置cd） 再调用一次异步即可
+
+
+
+
+
+自己理解vue
+
+
+首先vue有一个入口文件 index.js  有一个vue函数接收用户new vue时传入的参数
+
+在导入这个index.js 文件时 就会直接开始初始化方法 分别有update方法 render方法 混合全局api 扩展初始化方法
+
+首先第一个 initMixin 方法 传入Vue函数 给Vue原型上添加了_init的方法， 用户调用Vue时就会自动调用_init方法
+
+_init方法接收用户参数 将用户的options绑定到this上 这个this(下文使用vm代替)就是用户new Vue的实例 
+
+initState（传入vm） 初始化用户的参数 初始化的顺序 props methods data computed watch 
+
+初始化data数据将data数据变成响应式 initData 传入vm
+
+// 数据的响应式 
+
+1.使用vm获取到用户传入的options 取到data属性， data的写法如果是函数形式 那么就使用.call指向传入的vm 拿到返回值 
+如果不是函数形式就是对象了不处理， 将数据绑定到data 和 vm._data（绑定到_data统一管理）上
+
+2.将data上的数据for in循环取到key 使用definedProperty 用户实列取key的时候其实取得是_data中的key， 做了个中间转发
+这样做的好处就是vm上也能直接通过key值取到对应得数据
+
+3.观测数据Observe(data) ,只对对象类型进行观察 非对象类型不观测
+
+4.给观测数据 数组或对象添加dep属性
+
+5.给当前的数组或者对象绑定__ob__ 属性 设置不可枚举（enumerable）删除（configurable），判断当前值是数组还是对象
+
+6.数组处理：
+数组的修改不外乎方法，数组直接下标修改是不做响应式的（如果给数组的下标做成响应式，过于消耗性能）
+不能直接修改Array的方法 只修改vue中数组的方法， 使用Object.create复制一份Array的方法
+我们改写的方法有7个 push pop unshift shift splice reverse sort 这些方法都是会修改数组的方法
+push unshift splice 方法获取传入的参数 因为数组传入的数据也有可能是对象或数组 需要再次拦截
+
+
+将处理好后的数组绑定到当前数组上
+
+7.对象处理：
+
+
+关于dep：
+
+关于watcher：
+ 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
