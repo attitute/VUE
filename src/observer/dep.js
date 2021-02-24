@@ -16,7 +16,7 @@ export class Dep {
         this.subs.forEach(watcher => watcher.update());
     }
 }
-Dep.target = null
+Dep.target = null 
 
 
 export function pushTarget(watcher){

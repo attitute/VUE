@@ -48,7 +48,7 @@ initState（传入vm） 初始化用户的参数 初始化的顺序 props method
 
 1.使用vm获取到用户传入的options 取到data属性， data的写法如果是函数形式 那么就使用.call指向传入的vm 拿到返回值 
 如果不是函数形式就是对象了不处理， 将数据绑定到data 和 vm._data（绑定到_data统一管理）上
-
+6
 2.将data上的数据for in循环取到key 使用definedProperty 用户实列取key的时候其实取得是_data中的key， 做了个中间转发
 这样做的好处就是vm上也能直接通过key值取到对应得数据
 
@@ -56,24 +56,57 @@ initState（传入vm） 初始化用户的参数 初始化的顺序 props method
 
 4.给观测数据 数组或对象添加dep属性
 
-5.给当前的数组或者对象绑定__ob__ 属性 设置不可枚举（enumerable）删除（configurable），判断当前值是数组还是对象
+5.给当前的数组或者对象绑定__ob__ 属性 设置不可枚举（ enumerable）删除（configurable），判断当前值是数组还是对象
 
 6.数组处理：
 数组的修改不外乎方法，数组直接下标修改是不做响应式的（如果给数组的下标做成响应式，过于消耗性能）
 不能直接修改Array的方法 只修改vue中数组的方法， 使用Object.create复制一份Array的方法
 我们改写的方法有7个 push pop unshift shift splice reverse sort 这些方法都是会修改数组的方法
 push unshift splice 方法获取传入的参数 因为数组传入的数据也有可能是对象或数组 需要再次拦截
-
+每次调用这些方法就调用deep ，在初始化时就已经给对象和数组绑定了deep
 
 将处理好后的数组绑定到当前数组上
 
 7.对象处理：
+对象处理就是把用户给的每一数据都进行响应式的，用户写的就规定了一定是对象。
+对象的响应式就是使用defineProperty 进行 监听到每次数据的变化。
+需要注意的是用户传入的值也可能是个对象，所以也需要响应式
+
+对象是存取值得时候，存得时候让deep 记住watcher 设置值得时候让deep去执行watcher
 
 
-关于dep：
+关于dep： dep的作用最主要就是能够记住当前的watcher 也能让当前watcher执行，
+并且deep能够让watcher 记住当前的deep
 
-关于watcher：
- 
+关于watcher： 每个组件都有一个渲染watcher， 当dep是可以去执行watcher的
+watcher中可以记住deep 使用new set进行去重。  这样每次存入的deep就不会重复， deep不重复那么watcher存的时候
+也是存入不同的deep 所以watcher也不会重复。
+
+响应式差不多就是这样了
+
+
+// 渲染原理
+
+大致流程： 把模板编译成render函数， 如果模板是template或者html 使用parseHtml方法生成ast语法树
+使用正则对html文件进行切割，按照一定的规则拼凑成我们想要的ast语法树 ， 使用ast语法树编译成生成虚拟dom
+使用with函数将虚拟dom变成render函数， 再把render函数变成一个匿名函数，使用_render方法将_c之类的变成虚拟节点
+进行渲染部份update方法包裹render，取实列上_vnode 进行保存 判断上一次有没有_vnode， 使用vm._vnode保存当前传入的虚拟节点。 如果上一次没有_vnode
+那么说明是第一次渲染，vm.$el 获取到转后的html 真实dom 。如果上一次有_vnode那么说明需要进行比较了dom-diff
+
+
+
+ 虚拟dom 转换真实dom的流程：
+
+ 1. 初始化时 直接将vnode虚拟节点转换成dom节点就行  
+
+ 2. 非初始化
+
+  
+
+
+
+
+
 
 
 

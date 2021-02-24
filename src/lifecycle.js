@@ -9,7 +9,6 @@ export function lifecycleMixin(Vue) {
 
     const vm = this
 
-
     const prevVnode = vm._vnode // 先取上一次的vnode 看一下是否有
     vm._vnode = vnode // 保存上一次的虚拟节点
     if (!prevVnode){
@@ -26,7 +25,6 @@ export function callHook(vm,hook) { // 发布模式
   const handlers = vm.$options[hook]
   if (handlers)handlers.forEach(handler=>handler.call(vm))
 }
-
 
 
 export function mountComponent(vm, el) {
